@@ -2,23 +2,25 @@ import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 
+
+
 export const AddProduct = () => {
-    const [categories, setcategories] = useState([])
+    const [category, setcategory] = useState([])
       const [subCategories, setsubCategories] = useState([])
 
       const getAllCategories = async() => {
 
-        const res = await axios.get("/getAllCategories")
-        console.log(res.data)
-        setcategories(res.data)
-    
+        const res = await axios.get("/category/getAllCategories")
+        console.log(res.data.data)
+        setcategory(res.data.data)
     
       }
     
-      const getSubCategories = async(category_id) => {
-        const res = await axios.get("/getSubCategoryByCategoryId/"+category_id)
-        console.log(res.data)
-        setsubCategories(res.data)
+      const getsubcategory = async(category_id) => {
+
+        const res = await axios.get(`/subCategory/${category_id}`)
+        console.log(res.data.data)
+        setsubCategories(res.data.data)
       }
     
       useEffect(()=>{
@@ -27,24 +29,24 @@ export const AddProduct = () => {
     const {register,handleSubmit} = useForm()
     const submitHandler = async(data) => {
         console.log(data)
-        console.log(data.image[0])
+        // console.log(data.image[0])
 
         const formData = new FormData()
         formData.append("name",data.name)
         formData.append("price",parseFloat(data.price))
-        formData.append("category_id",data.category_id)
-        formData.append("sub_category_id",data.sub_category_id)
+        formData.append("categoryId",data.categoryId)
+        formData.append("subCategoryId",data.subCategoryId)
         formData.append("image",data.image[0])
-        formData.append("vendor_id",localStorage.getItem("id"))
+        formData.append("vendorId",localStorage.getItem("id"))
 
-        const res = await axios.post("/create_product_file",formData,{
-            headers: {
-                "Content-Type": "multipart/form-data",
-            },
-        })
-        console.log(res.data)//axios variable....
-
-
+        const res = await axios.post("/product/addwithImage",formData)
+        // ,{
+        //     headers: {
+        //         "Content-Type": "multipart/form-data",
+        //     },
+        // })
+        console.log(res);
+        console.log(res.data);//axios variable....
 
 
     }
@@ -53,7 +55,7 @@ export const AddProduct = () => {
         <h1>ADD PRODUCT</h1>
         <form onSubmit={handleSubmit(submitHandler)}>
             <div>
-                <label htmlFor="name">name</label>
+                <label htmlFor="productName">name</label>
                 <input type="text" {...register("name")} />
             </div>
             <div>
@@ -62,10 +64,11 @@ export const AddProduct = () => {
             </div>
             <div>
                 <label>CATEOGRY</label>
-                <select {...register("category_id")} onChange={(event)=>{getSubCategories(event.target.value)}}>
-                    <select>SELECT CATEGORY</select>
+                <select {...register("categoryId")} onChange={(event)=>{ getsubcategory(event.target.value)}}>
+                    <option>SELECT CATEGORY</option>
+                    
                     {
-                        categories?.map((category)=>{
+                        category?.map((category)=>{
                             return <option value={category._id}>{category.name}</option>
                         })
                     }
@@ -73,8 +76,8 @@ export const AddProduct = () => {
             </div>
             <div>
                 <label>SUB CATEGORY</label>
-                <select {...register("sub_category_id")}>
-                    <select>SELECT SUB CATEGORY</select>
+                <select {...register("subCategoryId")}>
+                    <option>SELECT SUB CATEGORY</option>
                     {
                         subCategories?.map((subCategory)=>{
                             return <option value={subCategory._id}>{subCategory.name}</option>

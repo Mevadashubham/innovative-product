@@ -1,7 +1,8 @@
 import React from 'react';
 import axios from 'axios';
 import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
+import Typography from '@mui/joy/Typography';
 
 export const Login = () => {
 
@@ -11,21 +12,24 @@ export const Login = () => {
   const submitHandler = async(data) => {
     //console.log(data);
     //login api... http://localhost:3000/user/login
-    const res = await axios.post("/user/login", data)
-    console.log(res.data)
-    if(res.status === 200){
+    try{
+      const res = await axios.post("/user/login", data)
+      console.log(res.data)
+
+      if(res.status === 200){
       alert("Login Success") //tost...
       localStorage.setItem("id",res.data.data._id)
       localStorage.setItem("role",res.data.data.roleId.name)
 
-      if(res.data.data.roleId.name === "USER"){
+      if(res.data.data.roleId.name === "VENDOR"){
         navigate("/vendor") //check in app.js
+      } else if (res.data.data.roleId.name === "USER"){
+        navigate("/user")
       }
     }
-    else{
-      alert("Login Failed")
-    }
-  }
+  } catch(error){console.error("Login failed:", error.response?.data?.message || error.message);
+      alert(error.response?.data?.message || "Login Failed"); // Show backend error message if available
+    }  };
 
   return (
     <div className="d-flex justify-content-center align-items-center vh-100" style={{  background: "linear-gradient(135deg, #6a11cb, #2575fc)"  }}>
@@ -45,8 +49,12 @@ export const Login = () => {
         <div>
           <input type="submit"></input>
         </div>
+        <div className="text-center text-muted mt-3">
+          Create an Account <a href="/signup" className="text-primary">Sign Up</a>
+        </div>
       </form>
     </div>
     </div>
   )
 }
+

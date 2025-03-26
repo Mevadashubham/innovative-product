@@ -8,7 +8,7 @@ export const VendorSidebar = () => {
 
   const toggleSidebar = () => {
     console.log("toggleSidebar");
-    setSidebarOpen(!isSidebarOpen);
+    setSidebarOpen((prev) => !prev);
   };
 
   return (
@@ -21,13 +21,7 @@ export const VendorSidebar = () => {
     <div className="sidebar-brand">
       
       <a href="./index.html" className="brand-link">
-        
-        <img
-          src="../../dist/assets/img/AdminLTELogo.png"
-          alt="AdminLTE Logo"
-          className="brand-image opacity-75 shadow"
-        />
-        
+         
         <span className="brand-text fw-light">AdminLTE 4</span>
         
       </a>
@@ -65,32 +59,13 @@ export const VendorSidebar = () => {
                 <i className="nav-arrow bi bi-chevron-right" />
               </p>
             </Link>
-            <ul className="nav nav-treeview">
-              <li className="nav-item">
-                <a href="./index.html" className="nav-link active">
-                  <i className="nav-icon bi bi-circle" />
-                  <p>Dashboard v1</p>
-                </a>
-              </li>
-              <li className="nav-item">
-                <a href="./index2.html" className="nav-link">
-                  <i className="nav-icon bi bi-circle" />
-                  <p>Dashboard v2</p>
-                </a>
-              </li>
-              <li className="nav-item">
-                <a href="./index3.html" className="nav-link">
-                  <i className="nav-icon bi bi-circle" />
-                  <p>Dashboard v3</p>
-                </a>
-              </li>
-            </ul>
-          </li>
-          <li className="nav-item">
-            <a href="./generate/theme.html" className="nav-link">
-              <i className="nav-icon bi bi-palette" />
-              <p>Theme Generate</p>
-            </a>
+            <Link to='viewproduct' className="nav-link active">
+              <i className="nav-icon bi bi-speedometer" />
+              <p>
+                ViewProduct
+                <i className="nav-arrow bi bi-chevron-right" />
+              </p>
+            </Link>
           </li>
           <li className="nav-item">
             <a href="#" className="nav-link">

@@ -11,6 +11,7 @@ import { UserProfile } from "./components/user/UserProfile";
 import { VendorSidebar } from "./components/layouts/VendorSidebar";
 import { AddProduct } from "./components/vendor/AddProduct";
 import PrivateRoutes from "./hooks/PrivateRoutes";
+import LandingPage from "./components/common/LandingPage";
 
 function App() {
   axios.defaults.baseURL = "http://localhost:3000";
@@ -27,11 +28,11 @@ function App() {
   }, [location.pathname]);
 
   return (
-    <div className={location.pathname === "/login" || location.pathname === "/Signup" ? "" : "app-wrapper"}>
+    <div className={location.pathname === "/login" || location.pathname === "/signup" ? "" : "app-wrapper"}>
     <Routes>
       <Route path="/login" element={<Login/>} />
       <Route path="/signup" element={<Signup/>} />
-
+<Route path="" element={<LandingPage />} />
 
       <Route path="" element={<PrivateRoutes />}>
         {/* <Route path="/user" element={<UserSidebar />}>
