@@ -12,6 +12,7 @@ import { VendorSidebar } from "./components/layouts/VendorSidebar";
 import { AddProduct } from "./components/vendor/AddProduct";
 import PrivateRoutes from "./hooks/PrivateRoutes";
 import LandingPage from "./components/common/LandingPage";
+import { ResetPassword } from "./components/common/ResetPassword";
 
 function App() {
   axios.defaults.baseURL = "http://localhost:3000";
@@ -33,6 +34,7 @@ function App() {
       <Route path="/login" element={<Login/>} />
       <Route path="/signup" element={<Signup/>} />
 <Route path="" element={<LandingPage />} />
+<Route path="resetpassword/:token" element={<ResetPassword />} />
 
       <Route path="" element={<PrivateRoutes />}>
         {/* <Route path="/user" element={<UserSidebar />}>

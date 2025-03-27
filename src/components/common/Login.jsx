@@ -47,7 +47,11 @@ export const Login = () => {
           <input type="text" {...register("password")} className="form-control" placeholder='enter password'/>
         </div>
         <div>
-          <input type="submit"></input>
+          <input type="submit" className='btn w-100 text-white' style={{ background: "linear-gradient(135deg, #6a11cb, #2575fc)", border: "none" }}></input>
+          
+        </div>
+        <div className="text-center text-muted mt-3">
+          <Link to="/forgotpassword" className="text-primary">Forgot Password?</Link>
         </div>
         <div className="text-center text-muted mt-3">
           Create an Account <a href="/signup" className="text-primary">Sign Up</a>
