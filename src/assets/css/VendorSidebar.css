@@ -1,0 +1,12 @@
+.app-sidebar {
+  width: 250px;
+  transition: transform 0.3s ease-in-out;
+}
+
+.app-sidebar.open {
+  transform: translateX(0);
+}
+
+.app-sidebar.collapsed {
+  transform: translateX(-100%);
+}

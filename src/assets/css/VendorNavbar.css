@@ -1,0 +1,39 @@
+.app-header {
+  transition: all 0.3s ease-in-out;
+  width: 100%;
+  background-color: #fff;
+  padding: 10px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #ddd;
+}
+
+.app-header.open {
+  margin-left: auto; /* Adjust based on sidebar width */
+  width: calc(150% - 500px);
+}
+
+.app-header.collapsed {
+  margin-left: auto; /* Adjust if sidebar is collapsed */
+  width: calc(110% - 100px);
+}
+
+/* Sidebar Transition */
+.sidebar {
+  width: 500px;
+  transition: width 0.3s ease-in-out;
+}
+
+.sidebar.collapsed {
+  width: 100px;
+}
+
+.main-content {
+  transition: margin-left 0.3s ease-in-out;
+  margin-left: 250px;
+}
+
+.main-content.collapsed {
+  margin-left: 80px;
+}

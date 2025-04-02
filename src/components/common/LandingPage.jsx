@@ -222,7 +222,40 @@ const LandingPage = () => {
           </div>
         </div>
       </section>
+      {/* footer */}
+      <footer className="footer_section bg-dark text-white py-4">
+                <div className="container">
+                    <div className="row">
+                        <div className="col-md-4">
+                            <h5 style={{ color: "gray" }}><b>About B2B Wholesale Market Portal</b></h5>
+                            <p style={{ textAlign: "justify" }}>
+                                We connect buyers and sellers in the wholesale market, providing a seamless platform for efficient transactions and business growth.
+                            </p>
+                        </div>
+                        <div className="col-md-4">
+                            <h5 style={{ color: "gray" }}><b>Quick Links</b></h5>
+                            <ul className="list-unstyled">
+                                <li><a href="/" className="text-white">Home</a></li>
+                                <li><a href="/about" className="text-white">About Us</a></li>
+                                <li><a href="/services" className="text-white">Services</a></li>
+                                <li><a href="/contact" className="text-white">Contact Us</a></li>
+                            </ul>
+                        </div>
+                        <div className="col-md-4">
+                            {/* <h5><b>Contact Information : </b></h5> <br></br> */}
+                            <h5 style={{ color: "gray" }}><b>Contact Information : </b></h5> <br />
+                            Email : &nbsp;<a href="mailto:doshisaumya7704@gmail.com" className="text-primary" style={{ position: "absolute" }}>doshisaumya7704@gmail.com</a><br />
+                            <p style={{ position: "absolute", right: "280px" }} >Phone: +91 9409270312</p><br></br>
+                            <br></br> <p style={{ position: "absolute", right: "100px" }}>Address: 123 Wholesale St, Business City, India</p>
+                        </div>
+                    </div>  
+                    <div className="text-center mt-3">
+                        <p>&copy;<b>2025 B2B Wholesale Market Portal. All Rights Reserved.</b> </p>
+                    </div>
+                </div>
+            </footer>
     </div>
+
   );
 };
 

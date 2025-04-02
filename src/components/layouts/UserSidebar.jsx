@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 import { UserNavbar } from './UserNavbar'
-import { Outlet } from 'react-router-dom'
+import { Link, Outlet } from 'react-router-dom'
 
 export const UserSidebar = () => {
 
@@ -58,13 +58,13 @@ export const UserSidebar = () => {
           data-accordion="false"
         >
           <li className="nav-item menu-open">
-            <a href="#" className="nav-link active">
+          <Link to='userviewproduct' className="nav-link active">
               <i className="nav-icon bi bi-speedometer" />
               <p>
-                Dashboard
+                ViewProduct
                 <i className="nav-arrow bi bi-chevron-right" />
               </p>
-            </a>
+            </Link>
             <ul className="nav nav-treeview">
               <li className="nav-item">
                 <a href="./index.html" className="nav-link active">

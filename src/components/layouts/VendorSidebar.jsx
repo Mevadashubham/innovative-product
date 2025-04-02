@@ -1,6 +1,7 @@
 import React, {useState} from 'react'
 import { VendorNavbar } from './VendorNavbar'
 import { Link, Outlet } from 'react-router-dom'
+import "../../assets/css/VendorSidebar.css";
 
 export const VendorSidebar = () => {
 
@@ -13,20 +14,23 @@ export const VendorSidebar = () => {
 
   return (
     <>
-     <VendorNavbar toggleSidebar={toggleSidebar} />
+    
+     <VendorNavbar isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
     <aside
-    className="app-sidebar bg-body-secondary shadow"
+     className={`app-sidebar bg-body-secondary shadow ${isSidebarOpen ? "open" : "d-none" }`}
     data-bs-theme="dark"
   >
-    <div className="sidebar-brand">
-      
-      <a href="./index.html" className="brand-link">
-         
-        <span className="brand-text fw-light">AdminLTE 4</span>
-        
-      </a>
-      
-    </div>
+   <div className="sidebar-brand">
+          <a href="./index.html" className="brand-link">
+            <img
+              // src="../../dist/assets/img/AdminLTELogo.png"
+              // alt="AdminLTE Logo"
+              className="brand-image opacity-75 shadow"
+            />
+
+            <span className="brand-text fw-light">AdminLTE 4</span>
+          </a>
+        </div>
 
     <div
       className=""
@@ -39,6 +43,7 @@ export const VendorSidebar = () => {
         top: "-8px",
         right: "auto",
         left: "-8px",
+        transition: "0.3s ease-in-out",
         width: "calc(100% + 16px)",
         padding: 8,
       }}
@@ -63,6 +68,13 @@ export const VendorSidebar = () => {
               <i className="nav-icon bi bi-speedometer" />
               <p>
                 ViewProduct
+                <i className="nav-arrow bi bi-chevron-right" />
+              </p>
+            </Link>
+            <Link to='updateproduct' className="nav-link active">
+              <i className="nav-icon bi bi-speedometer" />
+              <p>
+                UpdateProduct
                 <i className="nav-arrow bi bi-chevron-right" />
               </p>
             </Link>

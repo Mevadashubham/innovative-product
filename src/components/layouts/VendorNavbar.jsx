@@ -1,8 +1,9 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom';
 import hamburgermenu from "../../assets/images/hamburgermenu.png";
+// import "../../assets/css/VendorNavbar.css"
 
-export const VendorNavbar = ({ toggleSidebar }) => {
+export const VendorNavbar = ({ isSidebarOpen,toggleSidebar }) => {
 
     const navigate = useNavigate();
     const onLogout = () => {
@@ -14,9 +15,8 @@ export const VendorNavbar = ({ toggleSidebar }) => {
     };
 
 
-  return (
-
-            <nav className="app-header navbar navbar-expand bg-body">
+  return (  
+            <nav className={`app-header navbar navbar-expand bg-body ${isSidebarOpen ? '' : 'collapsed'}`}>
                 {/*begin::Container*/}
                 <div className="container-fluid">
                     {/* begin::Start Navbar Links */}
@@ -31,11 +31,13 @@ export const VendorNavbar = ({ toggleSidebar }) => {
                 padding: "5px 10px",
                 border: "1px solid #ccc",
                 borderRadius: "5px",
+                transition: "0.3s ease-in-out",
               }}
               onClick={(e) => {
                 e.preventDefault(); // Prevent any default action
                 toggleSidebar(); // Call the function
-              }}>
+              }}
+              >
               <img src={hamburgermenu} style={{height:"25px",width:"25px"}}></img>
             </a>
                         </li>
@@ -87,9 +89,9 @@ export const VendorNavbar = ({ toggleSidebar }) => {
                         {/*end::User Menu Dropdown*/}
                     </ul>
                     {/*end::End Navbar Links*/}
-                </div>
-                {/*end::Container*/}
-            </nav>
-        
-  )
-}
+                
+              {/*end::Container*/}
+              </div>
+            </nav>   
+
+            )}
