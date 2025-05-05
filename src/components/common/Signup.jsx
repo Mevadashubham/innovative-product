@@ -76,7 +76,7 @@ return (
                     />
                     {errors.firstName && <p className="text-red-500 text-sm">{errors.firstName.message}</p>}
                 </div>
-                <div>
+                <div className="mb-3">
                     <label htmlFor="lastName">Lastname</label>
                     <input
                         type="text"
@@ -88,7 +88,7 @@ return (
                     {errors.lastName && <p className="text-red-500 text-sm">{errors.lastName.message}</p>}
 
                 </div>
-                <div>
+                <div className="mb-3">
                     <label htmlFor="email">Email Address</label>
                     <input
                         type="email"
@@ -106,7 +106,7 @@ return (
                     {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
 
                 </div>
-                <div>
+                <div className="mb-3">
                     <label htmlFor="password">Password</label>
                     <input
                         type="password"
@@ -118,7 +118,7 @@ return (
                     {errors.password && <p className="text-red-500 text-sm">Password must be at least 6 characters</p>}
 
                 </div>
-                <div className='form-label'>
+                <div className="mb-3">
                     <label htmlFor="age">Age</label>
                     <input
                         type="number"
@@ -149,8 +149,8 @@ return (
                     Register
                 </button>
             </form>
-            <div className="text-center text-gray-600 mt-3">
-                Already have an account? <a href="/login" className="text-blue-500 hover:underline">Sign In</a>
+            <div className="text-center text-gray-600 ">
+                Already have an account? <a href="/login" className="text-blue-500 hover:underline hover:!text-blue-700">Sign In</a>
             </div>
         </div>
     </div>

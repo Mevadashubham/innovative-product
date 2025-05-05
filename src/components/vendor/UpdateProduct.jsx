@@ -52,6 +52,7 @@ export const UpdateProduct = () => {
     const [subCategories, setsubCategories] = useState([]);
     const { register, handleSubmit, setValue, reset, watch } = useForm();
     const [product, setProduct] = useState(null);
+    const [previewImage, setPreviewImage] = useState(""); // Preview new image before upload
 
 // Watch selected category to fetch subcategories
 const selectedCategoryId = watch("categoryId");
@@ -80,12 +81,18 @@ const selectedSubCategoryId = watch("subCategoryId");
                 // console.log("API Response:", res.data);
                 if (res.data && res.data.data) {
                   const product = res.data.data;
+                  setProduct(product); // ✅ Set product state
                   reset({
                     name: product.name || '',
                     price: product.price || '',
+                    offerPrice: product.offerPrice || '',
                     categoryId: product.categoryId?._id || '',
                     subCategoryId: product.subCategoryId?._id || '',
+                    productDetails: product.productDetails || '',
                   });
+                        // Store the existing image URL
+                        setPreviewImage(product.productImageURL || "");
+
                   if (product.categoryId?._id) {
                     await getsubcategory(product.categoryId._id);
                 }
@@ -114,26 +121,60 @@ useEffect(() => {
   }
 }, [selectedCategoryId]);
 
+        const handleImagePreview = (event) => {
+          const file = event.target.files[0];
+          if (file) {
+            setPreviewImage(URL.createObjectURL(file)); // Preview selected image
+          }
+        };
+
     const submitHandler = async (data) => {
       if (!id) {
         console.error("Error: Product ID is missing.");
         return;
     }
-      data.userId = localStorage.getItem("id");
-      //console.log(data);
+    if (!product) {
+        console.warn("Product data is not yet loaded. Retrying fetch...");
+        // await fetchProduct();  // Try refetching product data
+        return;
+    }
+
+    const formData = new FormData();
+      formData.append("name", data.name);
+      formData.append("price", data.price);
+      formData.append("offerPrice", data.offerPrice);
+      formData.append("categoryId", data.categoryId);
+      formData.append("subCategoryId", data.subCategoryId);
+      formData.append("productDetails", data.productDetails);
+      formData.append("userId", localStorage.getItem("id"));
       delete data._id; //put _id -->
-      console.log(data);
-      const res = await axios.put(`/product/updateProduct/${id}`, data);
-      console.log("Product updated successfully:", res.data);
-        console.log(data);
+
+      
+      if (data.image && data.image[0]) {
+        formData.append("image", data.image[0]);
+      } else {
+        formData.append("existingImage", product?.productImageURL || ""); // Keep existing image
+      }
+  
+      try {
+        const res = await axios.put(`/product/updateProduct/${id}`, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+        console.log("Product updated successfully:", res.data);
+      } catch (error) {
+        console.error("Error updating product:", error);
+      }
     };
 
     return (
-       <div className="d-flex justify-content-center align-items-center vh-100" 
+      <div className="d-flex justify-content-center align-items-center min-vh-100"
+
                //   style={{ background: "linear-gradient(135deg, #6a11cb, #2575fc)" }}
                >
                  <div className="add-product-form bg-white text-dark p-4 rounded shadow" 
-                   style={{ maxWidth: "400px", width: "100%" }}>
+                   style={{ maxWidth: "90%", minWidth: "400px", width: "30%" }}>
                    <div className="text-center mb-3">
                      <h2 className="fw-bold">UPDATE PRODUCT</h2>
                    </div>
@@ -144,9 +185,12 @@ useEffect(() => {
                      </div>
                      <div className="mb-3">
                        <label className="form-label">Price</label>
-                       <input type="text" {...register("price")} className="form-control" placeholder="Enter price" />
+                       <input type="Number" {...register("price")} className="form-control" placeholder="Enter price" />
                      </div>
-
+                     <div className="mb-3">
+                        <label>OfferPrice</label>
+                        <input type='Number' {...register("offerPrice")} placeholder='Enter Product Price' className="form-control" />
+                    </div>
                      <div className="mb-3">
                        <label className="form-label">CATEGORY</label>
                        <select
@@ -180,15 +224,39 @@ useEffect(() => {
                          ))}
                        </select>
                      </div>
-                     {/* <div className="mb-3">
+                     <div className="form-group">
+                        <label className="form-label">Product Description</label>
+                        <textarea {...register("productDetails", )} className="form-control" placeholder="Enter product description" rows="4" />
+                    </div>
+                     {/* Image Upload */}
+                     <div className="mb-3">
                        <label className="form-label">SELECT FILE</label>
                        <input type="file" {...register("image")} className="form-control" />
-                     </div> */}
+                     </div>
+                     
+                     {/* Display Existing or New Image */}
+                     <div className="mb-3 text-center">
+                          {previewImage ? (
+                            <>
+                              <p>Current Image:</p>
+                              <img
+                                src={previewImage}
+                                alt="Product"
+                                style={{ width: "100px", height: "100px", objectFit: "cover", borderRadius: "5px" }}
+                              />
+                            </>
+                          ) : (
+                            <p>No Image Available</p>
+                          )}
+                        </div>
+
                      <div>
                        <input type="submit" value="Update Product" 
                          className="btn w-100 text-white" 
                          style={{ background: "linear-gradient(135deg, #6a11cb, #2575fc)", border: "none" }} />
                      </div>
+
+
                      <div className="text-center text-muted mt-3">
                        <Link to="/vendor/viewproduct" className="text-primary">View Products</Link>
                      </div>

@@ -8,7 +8,8 @@ import { Link } from 'react-router-dom';
 export const AddProduct = () => {
     const [category, setcategory] = useState([])
       const [subCategories, setsubCategories] = useState([])
-
+      const [successMessage, setSuccessMessage] = useState('');
+      
       const getAllCategories = async() => {
 
         const res = await axios.get("/category/getAllCategories")
@@ -31,12 +32,16 @@ export const AddProduct = () => {
     const submitHandler = async(data) => {
         console.log(data)
         // console.log(data.image[0])
+        
+try{
 
         const formData = new FormData()
-        console.log("description value:", data.productDetails);
+        // console.log("description value:", data.productDetails);
         formData.append("name",data.name)
         formData.append("price",parseFloat(data.price))
-        formData.append("offerPrice",parseFloat(data.offerPrice))
+        if (data.offerPrice && !isNaN(parseFloat(data.offerPrice))) {
+          formData.append("offerPrice", parseFloat(data.offerPrice));
+        }
         formData.append("categoryId",data.categoryId)
         formData.append("subCategoryId",data.subCategoryId)
         formData.append("image",data.image[0])
@@ -48,19 +53,22 @@ export const AddProduct = () => {
           console.error("Description is empty. Product not added.");
           return; // Stop the submission
       }
-        const res = await axios.post("/product/addwithImage",formData)
-        // ,{
-        //     headers: {
-        //         "Content-Type": "multipart/form-data",
-        //     },
-        // })
-        console.log(res);
-        console.log(res.data);//axios variable....
+        const res = await axios.post("/product/addwithImage", formData, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
+        });
+        console.log(res.data);
+        setSuccessMessage("✅ Product added successfully!");
 
+    } catch (error) {
+        console.error("Error adding product:", error);
+        setSuccessMessage("❌ Failed to add product. Please try again.");
     }
+};
 
     return (
-        <div className="d-flex justify-content-center align-items-center vh-100" 
+        <div className="d-flex justify-content-center align-items-center min-vh-100" 
         //   style={{ background: "linear-gradient(135deg, #6a11cb, #2575fc)" }}
         >
           <div className="add-product-form bg-white text-dark p-4 rounded shadow" 
@@ -68,6 +76,7 @@ export const AddProduct = () => {
             <div className="text-center mb-3">
               <h2 className="fw-bold">ADD PRODUCT</h2>
             </div>
+                
             <form onSubmit={handleSubmit(submitHandler)}>
               <div className="mb-3">
                 <label className="form-label">Name <span className="text-danger">*</span></label>
@@ -112,6 +121,12 @@ export const AddProduct = () => {
                   className="btn w-100 text-white" 
                   style={{ background: "linear-gradient(135deg, #6a11cb, #2575fc)", border: "none" }} />
               </div>
+              {/* ✅ Success message alert */}
+              {successMessage && (
+                        <div className="alert alert-success text-center py-2" style={{ marginTop: "15px" }}>
+                          {successMessage}
+                        </div>
+                      )}
               <div className="text-center text-muted mt-3">
                 <Link to="/vendor/viewproduct" className="text-primary">View Products</Link>
               </div>

@@ -1,22 +1,35 @@
 import { useState, useEffect } from "react";
-import { Route, Routes, useLocation } from "react-router-dom";
-import { UserSidebar } from "./components/layouts/UserSidebar";
-// import { UserProfile } from "./components/user/UserProfile";
+import { Navigate, Route, Routes, useLocation } from "react-router-dom";
+// import { UserSidebar } from "./components/layouts/UserSidebar";
 import axios from "axios";
 import "./assets/css/adminlte.css";
 import "./assets/css/adminlte.min.css";
+
+
 import { Signup } from "./components/common/Signup";
 import { Login } from "./components/common/Login";
-import { UserProfile } from "./components/user/UserProfile";
+
 import { VendorSidebar } from "./components/layouts/VendorSidebar";
 import { AddProduct } from "./components/vendor/AddProduct";
 import PrivateRoutes from "./hooks/PrivateRoutes";
-import LandingPage from "./components/common/LandingPage";
+// import LandingPage from "./components/common/LandingPage";
 import { ResetPassword } from "./components/common/ResetPassword";
 import ViewProduct from "./components/vendor/ViewProduct";
 import UpdateProduct from "./components/vendor/UpdateProduct";
-import UserViewProduct from "./components/user/UserViewProduct";
-// import UserCart from "./components/user/UserCart";
+import { LandingPage1 } from "./components/user/LandingPage1";
+import { About } from "./components/user/About";
+// import { UserNavbar } from "./components/layouts/UserNavbar";
+import UserLayout from "./components/layouts/UserLayout";
+import { ConstactUs } from "./components/user/ConstactUs";
+import { Products } from "./components/user/Products";
+import { CartViewStep } from "./components/user/CartViewStep";
+import { Checkout } from "./components/user/Checkout";
+import { ShippingStep } from "./components/user/ShippingStep";
+import { ConfirmationStep } from "./components/user/ConfirmationStep";
+import { AdminOrders } from "./components/admin/AdminOrders";
+import {ProductDetails} from "./components/user/ProductDetails";
+import OrderDetails from "./components/user/OrderDeatils";
+import UserProfile from "./components/user/UserProfile";
 
 function App() {
   axios.defaults.baseURL = "http://localhost:3000";
@@ -37,22 +50,47 @@ function App() {
     <Routes>
       <Route path="/login" element={<Login/>} />
       <Route path="/signup" element={<Signup/>} />
-      <Route path="" element={<LandingPage />} />
+      {/* <Route path="" element={<LandingPage />} /> */}
+      
 
 <Route path="resetpassword/:token" element={<ResetPassword />} />
 
+
       <Route path="" element={<PrivateRoutes />}>
-        <Route path="/user" element={<UserSidebar />}>
-          <Route path="profile" element={<UserProfile/>} />
-          <Route path="userviewproduct" element={<UserViewProduct />} />
-          {/* <Route path="usercart" element={<UserCart />} /> */}
-        </Route>
+
+      <Route path="/" element={<Navigate to="/user" replace />} />
+          <Route path="/user" element={<UserLayout />}>
+
+              <Route index element={<LandingPage1 />} />
+
+            <Route path="homepage" element={<LandingPage1 />} />
+            <Route path="aboutus" element={<About />} />
+            <Route path="contactus" element={<ConstactUs />} />
+            <Route path="products" element={<Products />} />
+          
+          <Route path="userprofile" element={<UserProfile  />} />
+            <Route path="cartview" element={<CartViewStep />} />
+            <Route path="checkout" element={<Checkout />} />
+            <Route path="shippingstep" element={<ShippingStep />} />
+            <Route path="confirmationstep" element={<ConfirmationStep />} />
+            
+
+          </Route>
+
+          <Route path="/order-details" element={<OrderDetails />} />
+          
+          <Route path="products/:id" element={<ProductDetails />} />
+
 
           <Route path="/vendor" element={<VendorSidebar />}>
            <Route path="addproduct" element={<AddProduct />} />
            <Route path="viewproduct" element={<ViewProduct/>} />
-           <Route path="updateproduct/:id"  element={<UpdateProduct />}></Route> 
+           <Route path="updateproduct/:id"  element={<UpdateProduct />}></Route>            
           </Route>
+
+
+
+          <Route path="/admin/orders" element={<AdminOrders />} />
       </Route>
     </Routes>
     </div>

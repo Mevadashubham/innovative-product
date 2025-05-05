@@ -14,17 +14,23 @@ export const Login = () => {
     //login api... http://localhost:3000/user/login
     try{
       const res = await axios.post("/user/login", data)
+      const user = res.data.data;
       console.log(res.data)
 
       if(res.status === 200){
       alert("Login Success") //tost...
       localStorage.setItem("id",res.data.data._id)
       localStorage.setItem("role",res.data.data.roleId.name)
+      localStorage.setItem("id", user._id);                  // for /getuser/:id
+      localStorage.setItem("role", user.roleId.name);        // role check
+      localStorage.setItem("user", JSON.stringify(user));    // optional full user for instant access
 
       if(res.data.data.roleId.name === "VENDOR"){
         navigate("/vendor") //check in app.js
       } else if (res.data.data.roleId.name === "USER"){
-        navigate("/user")
+        navigate("/user/homepage")
+      } else {
+        alert("Unknown role");
       }
     }
   } catch(error){console.error("Login failed:", error.response?.data?.message || error.message);
@@ -40,21 +46,35 @@ export const Login = () => {
       <form onSubmit={handleSubmit(submitHandler)}>
         <div className="mb-3">
           <label className="form-label">EMAIL</label>
-          <input type="text" {...register("email")} className="form-control" placeholder='enter email'/>
+          <input type="text" {...register("email")} className="form-control" placeholder='enter email' 
+          
+          style={{borderRadius:"10px",   
+                  padding: ".375rem 20px 5px 5px",
+
+
+
+          }}/>
         </div>
         <div className="mb-3">
           <label className="form-label">Password</label>
-          <input type="text" {...register("password")} className="form-control" placeholder='enter password'/>
+          <input type="password" {...register("password")} className="form-control" placeholder='enter password'
+          
+          style={{borderRadius:"10px",   
+            padding: ".375rem 20px 5px 5px",
+
+
+
+    }}/>
         </div>
         <div>
           <input type="submit" className='btn w-100 text-white' style={{ background: "linear-gradient(135deg, #6a11cb, #2575fc)", border: "none" }}></input>
           
         </div>
         <div className="text-center text-muted mt-3">
-          <Link to="/forgotpassword" className="text-primary">Forgot Password?</Link>
+          <Link to="/forgotpassword" className="text-blue-500 hover:underline hover:!text-blue-700">Forgot Password?</Link>
         </div>
         <div className="text-center text-muted mt-3">
-          Create an Account <a href="/signup" className="text-primary">Sign Up</a>
+          Create an Account <a href="/signup" className="text-blue-500 hover:underline hover:!text-blue-700">Sign Up</a>
         </div>
       </form>
     </div>
