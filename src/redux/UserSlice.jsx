@@ -1,8 +1,8 @@
 // src/redux/UserSlice.js
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 
 const userSlice = createSlice({
-  name: 'user',
+  name: "user",
   initialState: {
     profile: null, // Will hold user data like name, email, etc.
   },
