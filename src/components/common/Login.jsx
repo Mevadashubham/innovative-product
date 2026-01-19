@@ -1,84 +1,113 @@
-import React from 'react';
-import axios from 'axios';
-import { useForm } from 'react-hook-form';
-import { useNavigate, Link } from 'react-router-dom';
-import Typography from '@mui/joy/Typography';
+import React from "react";
+import axios from "axios";
+import { useForm } from "react-hook-form";
+import { useNavigate, Link } from "react-router-dom";
+import Typography from "@mui/joy/Typography";
 
 export const Login = () => {
-
   const navigate = useNavigate();
 
-  const {register, handleSubmit} = useForm();
-  const submitHandler = async(data) => {
+  const { register, handleSubmit } = useForm();
+  const submitHandler = async (data) => {
     //console.log(data);
     //login api... http://localhost:3000/user/login
-    try{
-      const res = await axios.post("/user/login", data)
+    try {
+      const res = await axios.post("/user/login", data);
       const user = res.data.data;
-      console.log(res.data)
+      console.log(res.data);
 
-      if(res.status === 200){
-      alert("Login Success") //tost...
-      localStorage.setItem("id",res.data.data._id)
-      localStorage.setItem("role",res.data.data.roleId.name)
-      localStorage.setItem("id", user._id);                  // for /getuser/:id
-      localStorage.setItem("role", user.roleId.name);        // role check
-      localStorage.setItem("user", JSON.stringify(user));    // optional full user for instant access
+      if (res.status === 200) {
+        alert("Login Success"); //tost...
+        localStorage.setItem("id", user._id);
+        localStorage.setItem("user", JSON.stringify(user));
 
-      if(res.data.data.roleId.name === "VENDOR"){
-        navigate("/vendor") //check in app.js
-      } else if (res.data.data.roleId.name === "USER"){
-        navigate("/user/homepage")
-      } else {
-        alert("Unknown role");
+        // Check if roleId exists before accessing properties
+        if (!user.roleId || !user.roleId.name) {
+          alert("Role information is missing. Please contact support.");
+          return;
+        }
+
+        localStorage.setItem("role", user.roleId.name); // role check
+
+        if (user.roleId.name === "VENDOR") {
+          navigate("/vendor"); //check in app.js
+        } else if (user.roleId.name === "USER") {
+          navigate("/user/homepage");
+        } else {
+          alert("Unknown role");
+        }
       }
-    }
-  } catch(error){console.error("Login failed:", error.response?.data?.message || error.message);
+    } catch (error) {
+      console.error(
+        "Login failed:",
+        error.response?.data?.message || error.message,
+      );
       alert(error.response?.data?.message || "Login Failed"); // Show backend error message if available
-    }  };
+    }
+  };
 
   return (
-    <div className="d-flex justify-content-center align-items-center vh-100" style={{  background: "linear-gradient(135deg, #6a11cb, #2575fc)"  }}>
-      <div className="registration-form bg-white text-dark p-4 rounded shadow" style={{ maxWidth: "400px", width: "100%"}}>
+    <div
+      className="d-flex justify-content-center align-items-center vh-100"
+      style={{ background: "linear-gradient(135deg, #6a11cb, #2575fc)" }}
+    >
+      <div
+        className="registration-form bg-white text-dark p-4 rounded shadow"
+        style={{ maxWidth: "400px", width: "100%" }}
+      >
         <div className="text-center mb-3">
-      <h2 className="fw-bold">LOGIN USER</h2>
-       </div>
-      <form onSubmit={handleSubmit(submitHandler)}>
-        <div className="mb-3">
-          <label className="form-label">EMAIL</label>
-          <input type="text" {...register("email")} className="form-control" placeholder='enter email' 
-          
-          style={{borderRadius:"10px",   
-                  padding: ".375rem 20px 5px 5px",
-
-
-
-          }}/>
+          <h2 className="fw-bold">LOGIN USER</h2>
         </div>
-        <div className="mb-3">
-          <label className="form-label">Password</label>
-          <input type="password" {...register("password")} className="form-control" placeholder='enter password'
-          
-          style={{borderRadius:"10px",   
-            padding: ".375rem 20px 5px 5px",
-
-
-
-    }}/>
-        </div>
-        <div>
-          <input type="submit" className='btn w-100 text-white' style={{ background: "linear-gradient(135deg, #6a11cb, #2575fc)", border: "none" }}></input>
-          
-        </div>
-        <div className="text-center text-muted mt-3">
-          <Link to="/forgotpassword" className="text-blue-500 hover:underline hover:!text-blue-700">Forgot Password?</Link>
-        </div>
-        <div className="text-center text-muted mt-3">
-          Create an Account <a href="/signup" className="text-blue-500 hover:underline hover:!text-blue-700">Sign Up</a>
-        </div>
-      </form>
+        <form onSubmit={handleSubmit(submitHandler)}>
+          <div className="mb-3">
+            <label className="form-label">EMAIL</label>
+            <input
+              type="text"
+              {...register("email")}
+              className="form-control"
+              placeholder="enter email"
+              style={{ borderRadius: "10px", padding: ".375rem 20px 5px 5px" }}
+            />
+          </div>
+          <div className="mb-3">
+            <label className="form-label">Password</label>
+            <input
+              type="password"
+              {...register("password")}
+              className="form-control"
+              placeholder="enter password"
+              style={{ borderRadius: "10px", padding: ".375rem 20px 5px 5px" }}
+            />
+          </div>
+          <div>
+            <input
+              type="submit"
+              className="btn w-100 text-white"
+              style={{
+                background: "linear-gradient(135deg, #6a11cb, #2575fc)",
+                border: "none",
+              }}
+            ></input>
+          </div>
+          <div className="text-center text-muted mt-3">
+            <Link
+              to="/forgotpassword"
+              className="text-blue-500 hover:underline hover:!text-blue-700"
+            >
+              Forgot Password?
+            </Link>
+          </div>
+          <div className="text-center text-muted mt-3">
+            Create an Account{" "}
+            <a
+              href="/signup"
+              className="text-blue-500 hover:underline hover:!text-blue-700"
+            >
+              Sign Up
+            </a>
+          </div>
+        </form>
+      </div>
     </div>
-    </div>
-  )
-}
-
+  );
+};
