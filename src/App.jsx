@@ -32,7 +32,8 @@ import OrderDetails from "./components/user/OrderDeatils";
 import UserProfile from "./components/user/UserProfile";
 
 function App() {
-  axios.defaults.baseURL = "http://localhost:3000";
+  // axios.defaults.baseURL = "http://localhost:3000";
+  axios.defaults.baseURL = "https://your-backend-name.onrender.com";
 
   const location = useLocation();
 
