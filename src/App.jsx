@@ -31,9 +31,11 @@ import { ProductDetails } from "./components/user/ProductDetails";
 import OrderDetails from "./components/user/OrderDeatils";
 import UserProfile from "./components/user/UserProfile";
 
+axios.defaults.baseURL = import.meta.env.VITE_API_URL;
+
 function App() {
   // axios.defaults.baseURL = "http://localhost:3000";
-  axios.defaults.baseURL = "https://your-backend-name.onrender.com";
+  // axios.defaults.baseURL = "https://your-backend-name.onrender.com";
 
   const location = useLocation();
 
