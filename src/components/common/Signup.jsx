@@ -14,8 +14,8 @@ export const Signup = () => {
   const navigate = useNavigate();
   const [role, setRole] = useState("user"); //default role
 
-  const vendorRoleId = "696e06626d4734f8142239e2"; // Vendor RoleId
-  const userRoleId = "696e08e66d4734f8142239e7"; //  user role ID
+  const vendorRoleId = "696e264e6d4734f8142239f5"; // Vendor RoleId
+  const userRoleId = "696e26906d4734f8142239f7"; //  user role ID
 
   const submitHandler = async (data) => {
     console.log(data);
