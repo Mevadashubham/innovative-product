@@ -20,8 +20,9 @@ export const Products = () => {
     axios
       .get("/product/getAllProducts")
       .then((res) => {
-        setProducts(res.data.data);
-        setFilteredProducts(res.data.data);
+        const data = res.data.data || [];
+        setProducts(data);
+        setFilteredProducts(data);
       })
       .catch((err) => console.error("Error fetching products:", err));
   }, []);
@@ -30,7 +31,7 @@ export const Products = () => {
   useEffect(() => {
     axios
       .get("/category/getAllCategories")
-      .then((res) => setCategories(res.data.data))
+      .then((res) => setCategories(res.data.data || []))
       .catch((err) => console.error("Error fetching categories:", err));
   }, []);
 
@@ -38,7 +39,7 @@ export const Products = () => {
   useEffect(() => {
     axios
       .get("/subCategory/getAllSubCategories")
-      .then((res) => setSubCategories(res.data.data))
+      .then((res) => setSubCategories(res.data.data || []))
       .catch((err) => console.error("Error fetching subcategories:", err));
   }, []);
 
@@ -65,7 +66,7 @@ export const Products = () => {
 
   // Filter logic
   useEffect(() => {
-    let filtered = products;
+    let filtered = products || [];
 
     if (selectedCategory) {
       filtered = filtered.filter(
@@ -98,11 +99,12 @@ export const Products = () => {
             }}
           >
             <option value="">Filter by Category</option>
-            {categories.map((cat) => (
-              <option key={cat._id} value={cat._id}>
-                {cat.name}
-              </option>
-            ))}
+            {Array.isArray(categories) &&
+              categories.map((cat) => (
+                <option key={cat._id} value={cat._id}>
+                  {cat.name}
+                </option>
+              ))}
           </Form.Select>
         </Col>
 
@@ -117,13 +119,14 @@ export const Products = () => {
             ) : (
               <>
                 <option value="">Filter by Subcategory</option>
-                {subCategories
-                  .filter((sub) => sub.categoryId?._id === selectedCategory)
-                  .map((sub) => (
-                    <option key={sub._id} value={sub._id}>
-                      {sub.name}
-                    </option>
-                  ))}
+                {Array.isArray(subCategories) &&
+                  subCategories
+                    .filter((sub) => sub.categoryId?._id === selectedCategory)
+                    .map((sub) => (
+                      <option key={sub._id} value={sub._id}>
+                        {sub.name}
+                      </option>
+                    ))}
               </>
             )}
           </Form.Select>
@@ -132,60 +135,70 @@ export const Products = () => {
 
       {/* Product Cards */}
       <Row>
-        {filteredProducts.map((product) => (
-          <Col key={product._id} xs={12} sm={6} md={4} lg={3} className="mb-4">
-            <Card>
-              {product.offerPrice && (
-                <span className="badge bg-success position-absolute top-0 end-0 m-2">
-                  {Math.round(100 - (product.offerPrice / product.price) * 100)}
-                  % OFF
-                </span>
-              )}
-              <Card.Img
-                variant="top"
-                src={product.productImageURL}
-                alt={product.name}
-                style={{ height: "200px", objectFit: "cover" }}
-              />
-              <Card.Body>
-                <Card.Title>{product.name}</Card.Title>
+        {Array.isArray(filteredProducts) &&
+          filteredProducts.map((product) => (
+            <Col
+              key={product._id}
+              xs={12}
+              sm={6}
+              md={4}
+              lg={3}
+              className="mb-4"
+            >
+              <Card>
+                {product.offerPrice && (
+                  <span className="badge bg-success position-absolute top-0 end-0 m-2">
+                    {Math.round(
+                      100 - (product.offerPrice / product.price) * 100
+                    )}
+                    % OFF
+                  </span>
+                )}
+                <Card.Img
+                  variant="top"
+                  src={product.productImageURL}
+                  alt={product.name}
+                  style={{ height: "200px", objectFit: "cover" }}
+                />
+                <Card.Body>
+                  <Card.Title>{product.name}</Card.Title>
 
-                <div className="text-end">
-                  {product.offerPrice ? (
-                    <>
-                      <div
-                        style={{ fontSize: "0.9rem" }}
-                        className="text-muted text-decoration-line-through"
-                      >
-                        ₹{product.price}
-                      </div>
-                      <div
-                        style={{ fontSize: "1.1rem" }}
-                        className="text-danger fw-bold"
-                      >
-                        ₹{product.offerPrice}
-                      </div>
-                    </>
-                  ) : (
-                    <div className="fw-bold">₹{product.price}</div>
-                  )}
-                </div>
+                  <div className="text-end">
+                    {product.offerPrice ? (
+                      <>
+                        <div
+                          style={{ fontSize: "0.9rem" }}
+                          className="text-muted text-decoration-line-through"
+                        >
+                          ₹{product.price}
+                        </div>
+                        <div
+                          style={{ fontSize: "1.1rem" }}
+                          className="text-danger fw-bold"
+                        >
+                          ₹{product.offerPrice}
+                        </div>
+                      </>
+                    ) : (
+                      <div className="fw-bold">₹{product.price}</div>
+                    )}
+                  </div>
 
-                <div className="d-flex justify-content-between mt-2">
-                  <Button
-                    variant="primary"
-                    onClick={() => dispatch(addToCart(product))}
-                  >
-                    Add to Cart
-                  </Button>
-                  <Link to={`/products/${product._id}`}>
-                    <Button variant="outline-secondary">View Details</Button>
-                  </Link>
-                </div>
-              </Card.Body>
-            </Card>
-          </Col>
-        ))}
+                  <div className="d-flex justify-content-between mt-2">
+                    <Button
+                      variant="primary"
+                      onClick={() => dispatch(addToCart(product))}
+                    >
+                      Add to Cart
+                    </Button>
+                    <Link to={`/products/${product._id}`}>
+                      <Button variant="outline-secondary">View Details</Button>
+                    </Link>
+                  </div>
+                </Card.Body>
+              </Card>
+            </Col>
+          ))}
       </Row>
     </Container>
   );
