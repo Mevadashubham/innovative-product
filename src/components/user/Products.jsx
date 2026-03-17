@@ -156,9 +156,10 @@ export const Products = () => {
                 )}
                 <Card.Img
                   variant="top"
-                  src={product.productImageURL}
+                  src={product.productImages && product.productImages.length > 0 ? product.productImages[0] : product.productImageURL}
                   alt={product.name}
                   style={{ height: "200px", objectFit: "cover" }}
+                  loading="lazy"
                 />
                 <Card.Body>
                   <Card.Title>{product.name}</Card.Title>

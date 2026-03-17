@@ -1,18 +1,27 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { Card, Button } from "react-bootstrap";
+import { toast } from "react-toastify";
 
 const ViewProduct = () => {
   const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   // Function to fetch all products
   const fetchProducts = async () => {
+    setLoading(true);
+    setError(null);
     try {
       const res = await axios.get("/product/getAllProducts");
       console.log(res.data.data);
       setProducts(res.data.data);
     } catch (error) {
       console.error("Error fetching products:", error);
+      setError("Failed to load products. Please try again later.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -24,11 +33,11 @@ const ViewProduct = () => {
 
     try {
       await axios.delete(`/product/deleteProduct/${productId}`);
-      alert("Product deleted successfully!");
-      setProducts(products.filter((product) => product._id !== productId)); // Remove from UI
+      toast.success("Product deleted successfully!");
+      setProducts(products.filter((product) => product._id !== productId));
     } catch (error) {
       console.error("Error deleting product:", error);
-      alert("Failed to delete product.");
+      toast.error("Failed to delete product.");
     }
   };
 
@@ -39,107 +48,103 @@ const ViewProduct = () => {
   return (
     <div style={{ padding: "20px" }}>
       <h1>View Products</h1>
-      {products && products.length > 0 ? (
-        <div style={{ display: "flex", flexWrap: "wrap", gap: "20px" }}>
-          {products.map((product) => (
-            <div
+      
+      {/* Loading State */}
+      {loading && (
+        <div className="text-center my-5">
+          <div className="spinner-border text-primary" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </div>
+          <p className="mt-2">Loading products...</p>
+        </div>
+      )}
+
+      {/* Error State */}
+      {error && (
+        <div className="alert alert-danger" role="alert">
+          {error}
+          <button 
+            className="btn btn-sm btn-outline-danger ms-3" 
+            onClick={fetchProducts}
+          >
+            Retry
+          </button>
+        </div>
+      )}
+
+      {/* Products Display */}
+      {!loading && !error && (
+        <>
+          {products && products.length > 0 ? (
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "20px" }}>
+              {products.map((product) => (
+            <Card
               key={product._id}
-              style={{
-                border: "1px solid #ccc",
-                borderRadius: "8px",
-                padding: "15px",
-                width: "250px",
-                display: "flex",
-                flexDirection: "column", // Ensures children stack vertically
-                // justifyContent: "space-between", // Pushes button to bottom
-                minHeight: "400px", // Ensures cards have the same height
-              }}
+              style={{ width: "250px", minHeight: "400px" }}
+              className="shadow-sm"
             >
-              {product.productImageURL && (
-                <img
-                  src={product.productImageURL}
+              {((product.productImages && product.productImages.length > 0) || product.productImageURL) && (
+                <Card.Img
+                  variant="top"
+                  src={product.productImages && product.productImages.length > 0 ? product.productImages[0] : product.productImageURL}
                   alt={product.name}
-                  style={{ width: "100%", height: "auto", borderRadius: "4px" }}
+                  style={{ height: "200px", objectFit: "cover" }}
+                  loading="lazy"
                 />
               )}
-              <h3>{product.name}</h3>
-              {product.offerPrice !== undefined &&
-              product.offerPrice !== null &&
-              product.offerPrice !== product.price ? (
-                <>
-                  <p>
-                    <strong>Price:</strong>{" "}
-                    <span style={{ textDecoration: "line-through" }}>
-                      ${product.price}
-                    </span>
+              <Card.Body className="d-flex flex-column">
+                <Card.Title>{product.name}</Card.Title>
+                <Card.Text as="div">
+                  {product.offerPrice !== undefined &&
+                  product.offerPrice !== null &&
+                  product.offerPrice !== product.price ? (
+                    <>
+                      <p className="mb-1">
+                        <strong>Price:</strong>{" "}
+                        <span style={{ textDecoration: "line-through" }}>
+                          ${product.price}
+                        </span>
+                      </p>
+                      <p className="mb-1">
+                        <strong>Offer Price:</strong> ${product.offerPrice}
+                      </p>
+                    </>
+                  ) : (
+                    <p className="mb-1">
+                      <strong>Price:</strong> ${product.price}
+                    </p>
+                  )}
+                  <p className="mb-1">
+                    <strong>Category:</strong>{" "}
+                    {product.categoryId?.name || "N/A"}
                   </p>
-                  <p>
-                    <strong>Offer Price:</strong> ${product.offerPrice}
+                  <p className="mb-1">
+                    <strong>Sub Category:</strong>{" "}
+                    {product.subCategoryId?.name || "N/A"}
                   </p>
-                </>
-              ) : (
-                <p>
-                  <strong>Price:</strong> ${product.price}
-                </p>
-              )}
-              {/* <p>
-                <strong>Price:</strong> ${product.price}
-              </p> */}
-              {/* Assuming that product includes category information */}
-              <p>
-                <strong>Category:</strong>{" "}
-                {product.categoryId && product.categoryId.name
-                  ? product.categoryId.name
-                  : "N/A"}
-              </p>
-              <p>
-                <strong>Sub Category:</strong>{" "}
-                {product.subCategoryId && product.subCategoryId.name
-                  ? product.subCategoryId.name
-                  : "N/A"}
-              </p>
-              <p>
-                <strong>Description:</strong> {product.productDetails || "N/A"}
-              </p>
-              <div style={{ flexGrow: 1 }}></div>
-              <Link to={`/vendor/updateproduct/${product._id}`}>
-                <button
-                  style={{
-                    width: "100%",
-                    padding: "10px",
-                    backgroundColor: "#6a11cb",
-                    color: "white",
-                    border: "none",
-                    borderRadius: "5px",
-                    cursor: "pointer",
-                    marginTop: "10px",
-                  }}
-                >
-                  Update
-                </button>
-              </Link>
-              {/* Delete Button */}
-
-              <button
-                onClick={() => handleDelete(product._id)}
-                style={{
-                  width: "100%",
-                  padding: "10px",
-                  backgroundColor: "#dc3545", // Bootstrap danger red
-                  color: "white",
-                  border: "none",
-                  borderRadius: "5px",
-                  cursor: "pointer",
-                  marginTop: "10px",
-                }}
-              >
-                Delete
-              </button>
-            </div>
+                  <p className="mb-1">
+                    <strong>Description:</strong> {product.productDetails || "N/A"}
+                  </p>
+                </Card.Text>
+                
+                <div className="mt-auto">
+                    <Link to={`/vendor/updateproduct/${product._id}`}>
+                        <Button variant="primary" className="w-100 mb-2">
+                        Update
+                        </Button>
+                    </Link>
+                    <Button variant="danger" className="w-100" onClick={() => handleDelete(product._id)}>
+                        Delete
+                    </Button>
+                </div>
+              </Card.Body>
+            </Card>
           ))}
         </div>
       ) : (
         <p>No products found.</p>
+      )}
+        </>
       )}
     </div>
   );
