@@ -1,9 +1,11 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom';
 import hamburgermenu from "../../assets/images/hamburgermenu.png";
+import nightModeIcon from "../../assets/images/night-mode.png";
+import lightModeIcon from "../../assets/images/light-mode.png";
 // import "../../assets/css/VendorNavbar.css"
 
-export const VendorNavbar = ({ isSidebarOpen,toggleSidebar }) => {
+export const VendorNavbar = ({ isSidebarOpen, toggleSidebar, darkMode, toggleDarkMode }) => {
 
     const navigate = useNavigate();
     const onLogout = () => {
@@ -16,7 +18,10 @@ export const VendorNavbar = ({ isSidebarOpen,toggleSidebar }) => {
 
 
   return (  
-            <nav className={`app-header navbar navbar-expand bg-body ${isSidebarOpen ? '' : 'collapsed'}`}>
+            <nav 
+              className={`app-header navbar navbar-expand bg-body ${isSidebarOpen ? '' : 'collapsed'}`}
+              data-bs-theme={darkMode ? "dark" : "light"}
+            >
                 {/*begin::Container*/}
                 <div className="container-fluid">
                     {/* begin::Start Navbar Links */}
@@ -27,7 +32,7 @@ export const VendorNavbar = ({ isSidebarOpen,toggleSidebar }) => {
               href="#"
               role="button"
               style={{
-                color: "black",
+                // color: "black", // Removed hardcoded black
                 padding: "5px 10px",
                 border: "1px solid #ccc",
                 borderRadius: "5px",
@@ -38,54 +43,55 @@ export const VendorNavbar = ({ isSidebarOpen,toggleSidebar }) => {
                 toggleSidebar(); // Call the function
               }}
               >
-              <img src={hamburgermenu} style={{height:"25px",width:"25px"}}></img>
+              <img src={hamburgermenu} style={{height:"25px",width:"25px", filter: darkMode ? "invert(1)" : "none"}}></img> 
+              {/* Invert hamburger icon color in dark mode if it's an image. 
+                  Actually, the image source is 'hamburgermenu.png'. If it's black lines on transparent, it needs inversion. 
+                  Using CSS filter to invert it if darkMode is active. 
+              */}
             </a>
                         </li>
-                        {/* <li className="nav-item d-none d-md-block">
-                            <a href="#" className="nav-link">
-                                Home
-                            </a>
-                        </li>
-                        <li className="nav-item d-none d-md-block">
-                            <a href="#" className="nav-link">
-                                Contact
-                            </a>
-                        </li>
-                        <li className="nav-item d-none d-md-block">
-                            <a href="#" className="nav-link">
-                                Admin
-                            </a>
-                        </li>
-                        <li className="nav-item d-none d-md-block">
-                            <a href="#" className="nav-link">
-                                User
-                            </a>
-                        </li>*/}
                     </ul> 
                     {/*end::Start Navbar Links*/}
+
                     {/*begin::End Navbar Links*/}
-                    <ul className="navbar-nav ms-auto">
+                    <ul className="navbar-nav ms-auto align-items-center">
 
-                        {/*begin::User Menu Dropdown*/}
-                        <li className="nav-item dropdown user-menu">
-                            <a
-                                href="#"
-                                className="nav-link dropdown-toggle"
-                                data-bs-toggle="dropdown"
+                        {/* Theme Toggle Button */}
+                        <li className="nav-item">
+                            <button 
+                                className="btn btn-outline-secondary rounded-circle" 
+                                onClick={toggleDarkMode}
+                                title={darkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
+                                style={{
+                                    width: '40px', 
+                                    height: '40px', 
+                                    padding: 0, 
+                                    display: 'flex', 
+                                    alignItems: 'center', 
+                                    justifyContent: 'center',
+                                    border: 'none', // Optional: remove border if icons look better without
+                                    background: 'white'
+                                }}
                             >
-                                {/* <span className="d-none d-md-inline"> Add Employee |</span> */}
-                                <a style={{position:'relative', left:"20px" }} href='/login'> Login | </a>
-                                <a style={{position:'relative', left:"20px" }} href='/signup'> Signup </a>
-
-
-                            </a>
-                            <ul className="dropdown-menu dropdown-menu-lg dropdown-menu-end">
-                            </ul>
+                                <img 
+                                    src={darkMode ? lightModeIcon : nightModeIcon} 
+                                    alt={darkMode ? "Light Mode" : "Dark Mode"}
+                                    style={{ width: '24px', height: '24px', objectFit: 'contain' }}
+                                />
+                            </button>
                         </li>
+
+                        {/* Login/Signup Links - Cleaned up */}
+                        <li className="nav-item d-flex align-items-center ms-2">
+                             <a href='/login' className="nav-link px-2">Login</a>
+                             <span className="text-muted">|</span>
+                             <a href='/signup' className="nav-link px-2">Signup</a>
+                        </li>
+                        
                           {/* Logout Button */}
                           <li className="nav-item">
                                 <button className="btn btn-danger ms-3" onClick={onLogout}>Logout</button>
-                                    </li>
+                          </li>
                         {/*end::User Menu Dropdown*/}
                     </ul>
                     {/*end::End Navbar Links*/}
@@ -94,4 +100,5 @@ export const VendorNavbar = ({ isSidebarOpen,toggleSidebar }) => {
               </div>
             </nav>   
 
-            )}
+            )
+}

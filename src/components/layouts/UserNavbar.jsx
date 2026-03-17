@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
@@ -6,6 +6,29 @@ import { Badge, Typography } from '@mui/joy';
 import { useSelector } from 'react-redux';
 
 export const UserNavbar = () => {
+  const [showNavbar, setShowNavbar] = useState(true);
+  const lastScrollY = useRef(0);
+
+  useEffect(() => {
+    const controlNavbar = () => {
+      if (typeof window !== 'undefined') {
+        if (window.scrollY > lastScrollY.current && window.scrollY > 100) {
+          setShowNavbar(false);
+        } else {
+          setShowNavbar(true);
+        }
+        lastScrollY.current = window.scrollY;
+      }
+    };
+
+    if (typeof window !== 'undefined') {
+      window.addEventListener('scroll', controlNavbar);
+
+      return () => {
+        window.removeEventListener('scroll', controlNavbar);
+      };
+    }
+  }, []);
   
   const isLoggedIn = Boolean(localStorage.getItem('id'));
   const state = useSelector((state) => state.cart);
@@ -29,6 +52,8 @@ export const UserNavbar = () => {
         left: 0,
         width: '100%',
         zIndex: 1000,
+        transform: showNavbar ? 'translateY(0)' : 'translateY(-100%)',
+        transition: 'transform 0.3s ease-in-out',
       }}
     >
       <div className="container-fluid">

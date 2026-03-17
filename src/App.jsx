@@ -4,6 +4,8 @@ import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import axios from "axios";
 import "./assets/css/adminlte.css";
 import "./assets/css/adminlte.min.css";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import { Signup } from "./components/common/Signup";
 import { Login } from "./components/common/Login";
@@ -94,6 +96,15 @@ function App() {
           <Route path="/admin/orders" element={<AdminOrders />} />
         </Route>
       </Routes>
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        pauseOnHover
+        theme="colored"
+      />
     </div>
   );
 }

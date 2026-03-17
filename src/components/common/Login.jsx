@@ -8,6 +8,7 @@ export const Login = () => {
   const navigate = useNavigate();
 
   const { register, handleSubmit } = useForm();
+
   const submitHandler = async (data) => {
     //console.log(data);
     //login api... http://localhost:3000/user/login
@@ -21,7 +22,6 @@ export const Login = () => {
         localStorage.setItem("id", user._id);
         localStorage.setItem("user", JSON.stringify(user));
 
-        // Check if roleId exists before accessing properties
         if (!user.roleId || !user.roleId.name) {
           alert("Role information is missing. Please contact support.");
           return;
@@ -63,7 +63,7 @@ export const Login = () => {
             <label className="form-label">EMAIL</label>
             <input
               type="text"
-              {...register("email")}
+              {...register("email", { required: true })}
               className="form-control"
               placeholder="enter email"
               style={{ borderRadius: "10px", padding: ".375rem 20px 5px 5px" }}
@@ -73,7 +73,7 @@ export const Login = () => {
             <label className="form-label">Password</label>
             <input
               type="password"
-              {...register("password")}
+              {...register("password", { required: true })}
               className="form-control"
               placeholder="enter password"
               style={{ borderRadius: "10px", padding: ".375rem 20px 5px 5px" }}

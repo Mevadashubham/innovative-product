@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import { VendorNavbar } from './VendorNavbar'
 import { Link, Outlet } from 'react-router-dom'
 import "../../assets/css/VendorSidebar.css";
@@ -6,22 +6,39 @@ import "../../assets/css/VendorSidebar.css";
 export const VendorSidebar = () => {
 
   const [isSidebarOpen, setSidebarOpen] = useState(true);
+  // Initialize dark mode from localStorage or default to false
+  const [darkMode, setDarkMode] = useState(() => {
+    return localStorage.getItem('vendorDarkMode') === 'true';
+  });
 
   const toggleSidebar = () => {
     console.log("toggleSidebar");
     setSidebarOpen((prev) => !prev);
   };
 
+  const toggleDarkMode = () => {
+    setDarkMode((prevMode) => {
+      const newMode = !prevMode;
+      localStorage.setItem('vendorDarkMode', newMode);
+      return newMode;
+    });
+  };
+
   return (
     <>
     
-     <VendorNavbar isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
+     <VendorNavbar 
+        isSidebarOpen={isSidebarOpen} 
+        toggleSidebar={toggleSidebar} 
+        darkMode={darkMode}
+        toggleDarkMode={toggleDarkMode}
+      />
     <aside
      className={`app-sidebar bg-body-secondary shadow ${isSidebarOpen ? "open" : "d-none" }`}
-    data-bs-theme="dark"
+     data-bs-theme={darkMode ? "dark" : "light"}
   >
    <div className="sidebar-brand">
-          <a href="./index.html" className="brand-link">
+          <a href="#" className="brand-link">
             <img
               // src="../../dist/assets/img/AdminLTELogo.png"
               // alt="AdminLTE Logo"
@@ -113,8 +130,8 @@ export const VendorSidebar = () => {
       </nav>
     </div>
  </aside>
- <main className='app-main'>
-  <Outlet></Outlet>
+ <main className='app-main bg-body' data-bs-theme={darkMode ? "dark" : "light"}>
+  <Outlet context={{ darkMode }} /> 
  </main>
  </>
   )
